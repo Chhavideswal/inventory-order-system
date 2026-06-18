@@ -8,18 +8,23 @@ app = FastAPI(title="Inventory & Order Management API")
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change in production if needed
+    allow_origins=["*"],  # restrict in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize database on startup (IMPORTANT for Render)
+# Initialize DB on startup
 @app.on_event("startup")
 def startup():
     init_db()
 
-# Routes
+# ✅ ROOT ROUTE (fix for your "Not Found")
+@app.get("/")
+def home():
+    return {"message": "Backend is running"}
+
+# API ROUTES
 app.include_router(products.router, prefix="/api")
 app.include_router(customers.router, prefix="/api")
 app.include_router(orders.router, prefix="/api")
